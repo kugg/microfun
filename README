@@ -1,0 +1,37 @@
+Microfun experiements with microservices.
+Installed on Ubuntu Xenial running in Qubes 3.2
+
+#Install docker
+sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
+lsb_release -cs
+sudo add-apt-repository        "deb https://apt.dockerproject.org/repo/ \
+                                ubuntu-$(lsb_release -cs) \
+                                main"
+sudo apt-get update
+sudo apt-get -y install docker-engine
+
+#Install nodejs
+curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
+chmod +x nodesource_setup.sh 
+sudo ./nodesource_setup.sh 
+sudo apt-get install nodejs
+
+#Make app in nodejs
+mkdir goodmorning
+cd goodmorning/
+$EDITOR server.js
+npm init
+$EDITOR package.json 
+$EDITOR Dockerfile
+
+#Building and running docker image
+sudo docker build -t user/goodmorning .
+sudo docker run -p 80:8080 -d user/goodmorning
+
+#Monitoring
+sudo docker images
+sudo docker ps
+sudo docker logs fb9be198209a
+sudo docker exec -it fb9be198209a /bin/bash
+curl -i localhost:80
