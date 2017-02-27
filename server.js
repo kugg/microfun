@@ -1,13 +1,19 @@
-var express = require('express');
+var express = require('express'),
+    wine = require('./routes/wines');
 
-// Constants
-var PORT = 8080;
+var logger = require('morgan');
+var bodyParser = require('body-parser');
 
-// App
 var app = express();
-app.get('/', function (req, res){
-  res.send('Good morning netizen!');
-});
 
-app.listen(PORT);
-console.log('Running on http://localhost:' + PORT);
+app.use(logger('dev')); /* 'default', 'short', 'tiny', 'dev' */
+app.use(bodyParser.json());
+
+app.get('/wines', wine.findAll);
+app.get('/wines/:id', wine.findById);
+app.post('/wines', wine.addWine);
+app.put('/wines/:id', wine.updateWine);
+app.delete('/wines/:id', wine.deleteWine);
+
+app.listen(8080);
+console.log('Listening on port 8080...');

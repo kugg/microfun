@@ -1,7 +1,7 @@
 Microfun experiements with microservices.
 Installed on Ubuntu Xenial running in Qubes 3.2
 
-#Install docker
+# Install docker
 sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
 lsb_release -cs
@@ -11,13 +11,13 @@ sudo add-apt-repository        "deb https://apt.dockerproject.org/repo/ \
 sudo apt-get update
 sudo apt-get -y install docker-engine
 
-#Install nodejs
+# Install nodejs
 curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
 chmod +x nodesource_setup.sh 
 sudo ./nodesource_setup.sh 
 sudo apt-get install nodejs
 
-#Make app in nodejs
+# Make app in nodejs
 mkdir goodmorning
 cd goodmorning/
 $EDITOR server.js
@@ -25,13 +25,45 @@ npm init
 $EDITOR package.json 
 $EDITOR Dockerfile
 
-#Building and running docker image
+# Building and running docker image
 sudo docker build -t user/goodmorning .
 sudo docker run -p 80:8080 -d user/goodmorning
 
-#Monitoring
+# Monitoring
 sudo docker images
 sudo docker ps
 sudo docker logs fb9be198209a
 sudo docker exec -it fb9be198209a /bin/bash
 curl -i localhost:80
+
+# Installing MongoDB
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+                 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+echo "deb [ arch=amd64,arm64 ] \
+      http://repo.mongodb.org/apt/ubuntu \
+      xenial/mongodb-org/3.4 multiverse" | \
+      sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+git clone https://github.com/kugg/microstore
+cd microstore
+sudo docker build --tag user/microstore .
+sudo docker run -p 27017:27017 -d user/microstore
+
+# Using a REST client
+
+Get all wines:
+curl -i -X GET http://localhost:8080/wines
+
+Get wine with _id value of 5069b47aa892630aae000007 (use a value that exists in your database):
+curl -i -X GET http://localhost:8080/wines/5069b47aa892630aae000007
+
+Delete wine with _id value of 5069b47aa892630aae000007:
+curl -i -X DELETE http://localhost:8080/wines/5069b47aa892630aae000007
+
+Add a new wine:
+curl -i -X POST -H 'Content-Type: application/json' -d '{"name": "New Wine", "year": "2009"}' http://localhost:8080/wines
+
+Modify wine with _id value of 5069b47aa892630aae000007:
+curl -i -X PUT -H 'Content-Type: application/json' -d '{"name": "New Wine", "year": "2010"}' http://localhost:8080/wines/5069b47aa892630aae000007

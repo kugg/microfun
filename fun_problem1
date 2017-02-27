@@ -1,0 +1,13 @@
+Information leaks in version changes:
+
+TypeError: Cannot read property 'findOne' of undefined
+   at /home/user/microfun/routes/wines.js:26:19
+   at Db.collection (/home/user/microfun/node_modules/mongodb/lib/db.js:457:27)
+   at exports.findById (/home/user/microfun/routes/wines.js:25:8)
+   at Layer.handle [as handle_request] (/home/user/microfun/node_modules/express/lib/router/layer.js:95:5)
+   at next (/home/user/microfun/node_modules/express/lib/router/route.js:131:13)
+   at Route.dispatch (/home/user/microfun/node_modules/express/lib/router/route.js:112:3)
+   at Layer.handle [as handle_request] (/home/user/microfun/node_modules/express/lib/router/layer.js:95:5)
+   at /home/user/microfun/node_modules/express/lib/router/index.js:277:22
+   at param (/home/user/microfun/node_modules/express/lib/router/index.js:349:14)
+   at param (/home/user/microfun/node_modules/express/lib/router/index.js:365:14) 
